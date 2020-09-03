@@ -1,0 +1,116 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<br>
+
+<div class="container card">
+    {% include '_messages.html' %}
+    <div class="row">
+        <table class="table table-sm">
+            <thead>
+                <th>Sr</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Color</th>
+                <th>Price</th>
+                <th>Quantity</th>
+            </thead>
+            <tbody>
+            {% for key, product in session['Shoppingcart'].items() %}
+            <tr>
+                <td>{{loop.index}}</td>
+                <td><img src="{{url_for('static', filename='images/' + product.image)}}" alt="{{product.name}}" width="50" height="50"> </td>
+                <td>{{product.name}}</td>
+                <td>{{product.color}}</td>
+                <td>{{product.price}} €</td>
+                <td>{{product.quantity}}</td>
+
+            </tr>
+            {% endfor %}
+            </table>
+            <table class="table table-sm">
+                <thead></thead>
+                    <tbody>
+                    <tr>
+                        <td><a class="btn ntn-sm btn-warning" href="/">Back to shopping</a></td>
+                        <td></td>
+                        <td></td>
+                        <td ><h4>Total: {{total}} €</h4></td>
+                        <td>
+                        <div id="paypal-button"></div>
+                        </td>
+                    </tr>
+                    </tbody>
+            </table>
+        <table class="table table-sm">
+            <thead></thead>
+            <tbody>
+
+            <tr>
+                <td><h4>Shipping info</h4></td>
+            </tr>
+            <tr>
+                <td>name: {{session['Shipinfo'].name}}</td>
+            </tr>
+            <tr>
+                <td>email: {{session['Shipinfo'].email}}</td>
+            </tr>
+            <tr>
+                <td>addres: {{session['Shipinfo'].addres}}</td>
+            </tr>
+            <tr>
+                <td>zipcode: {{session['Shipinfo'].zipcode}}</td>
+            </tr>
+            <tr>
+                <td>phone: {{session['Shipinfo'].phone}}</td>
+            </tr>
+            <tr></tr>
+
+
+
+            </tbody>
+        </table>
+
+
+    </div>
+</div>
+
+
+
+
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
+<script>
+    var CREATE_PAYMENT_URL  = 'http://127.0.0.1:5000/paymentt';
+    var EXECUTE_PAYMENT_URL = 'http://127.0.0.1:5000/execute';
+
+    paypal.Button.render({
+
+        env: 'sandbox', // Or 'sandbox'
+
+        commit: true, // Show a 'Pay Now' button
+
+        payment: function() {
+            return paypal.request.post(CREATE_PAYMENT_URL).then(function(data) {
+                return data.paymentID;
+            });
+        },
+
+        onAuthorize: function(data) {
+            return paypal.request.post(EXECUTE_PAYMENT_URL, {
+                paymentID: data.paymentID,
+                payerID:   data.payerID
+            }).then(function(res) {
+                console.log(res.success)
+                // The payment is complete!
+                // You can now show a confirmation message to the customer
+                window.location.replace("http://127.0.0.1:5000/")
+                window.alert('Transaction complete!');
+            });
+        }
+
+    }, '#paypal-button');
+</script>
+
+
+{% endblock content %}

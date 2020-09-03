@@ -1,0 +1,98 @@
+{% extends 'layout.html' %}
+{% block content %}
+<br>
+
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
+  <a class="navbar-brand" href="{{url_for('getCart')}}">Cart({{session['Shoppingcart']|length}}) </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="{{url_for('front')}}">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="{{url_for('home')}}">Products <span class="sr-only">(current)</span></a>
+      </li>
+    </ul>
+  </div>
+</nav>
+</div>
+<!----------navbar ends-->
+
+<style>
+
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .imgbox {
+            display: grid;
+            height: 100%;
+        }
+        .center-fit {
+            max-width: 100%;
+            max-height: 100vh;
+            margin: auto;
+        }
+        body
+{
+
+</style>
+
+<div class="container mt-5">
+    {% include '_messages.html' %}
+    <div class="row">
+        <div class="col-md-6" id="b_image">
+            <img class="center-fit rounded" src="{{url_for('static', filename='images/' + product.image_1)}}" alt="{{product.name}}">
+        </div>
+        <div class="col-md-5 card">
+            <h4>{{product.name}}</h4>
+            <b> price {{product.price}} eepelsson</b>
+            <hr>
+            <p> {{product.description}}
+            </p>
+            <form action="{{url_for('AddCart')}}" method="post">
+                <input type="hidden" name="product_id" value="{{product.id}}">
+                <button type="submit" class="btn btn-sm btn-warning"> Add to cart</button>
+                <label for="">Quantity:</label>
+                <input type="number" name="quantity" id="" value="1" min="1" max="{{product.stock}}">
+                <label for="">Color:</label>
+                {% set colors = product.color.split(',')%}
+                <select name="color" id="c">
+                    {% for col in colors %}
+                    {% set col = col.split(':') %}
+                    <option value="{{col[0]}}">{{col[0]}}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12" id="s_image">
+            <img class="center-fit rounded" src="{{url_for('static', filename='images/' + product.image_1)}}" alt="{{product.name}}" height="90" width="90">
+            <img class="center-fit rounded" src="{{url_for('static', filename='images/' + product.image_2)}}" alt="{{product.name}}"height="90" width="90">
+        </div>
+    </div>
+    <hr>
+    <a class="btn ntn-sm btn-warning" href="/products">Continue shopping</a>
+</div>
+
+<script>
+    var b_image = document.getElementById('b_image');
+    var s_image = document.getElementById('s_image').getElementsByTagName('img');
+    for(var i = 0; i < s_image.length; i++){
+        s_image[i].addEventListener('click', full_image);
+    }
+    function full_image(){
+        var ImageSRC = this.getAttribute('src');
+        b_image.innerHTML = '<img class="center-fit rounded" src='+ImageSRC+' alt="{{product.name}}">';
+    }
+</script>
+
+{% endblock content %}

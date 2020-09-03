@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Adminskeidaa</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="{{url_for('home')}}">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href={{url_for("show_db")}}>show products</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+</div>
+
+<div class="text-center h1"> Update product</div>
+
+<div class="container">
+    {% include '_messages.html' %}
+        {% from "_formhelpers.html" import render_field %}
+        <form method="post" enctype="multipart/form-data">
+            <div>
+                {{ render_field(form.name, class="form-control" , placeholder="Add name") }}
+                {{ render_field(form.price, class="form-control" , placeholder="Add price") }}
+                {{ render_field(form.discount, class="form-control" , placeholder="Add discount") }}
+                {{ render_field(form.stock, class="form-control" , placeholder="Add stock") }}
+                {{ render_field(form.description, class="form-control" , placeholder="Add description") }}
+                {{ render_field(form.colors, class="form-control" , placeholder="Add color" , rows="10") }}
+
+                <div class="container">
+                    <div class="row">
+                         <div class="col-md-6">{{ render_field(form.image_1, class="form-control") }}</div>
+                        <div class="col-md-6">{{ render_field(form.image_2, class="form-control") }}</div>
+                    </div>
+                </div>
+
+
+            </div>
+        <p><input type=submit value=Update class="btn btn-info"></p>
+    </form>
+</div>
+
+{% endblock content %}
